@@ -2,7 +2,7 @@ name: Multilingual Chat App CI/CD
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
