@@ -8,14 +8,8 @@ RUN apt-get -y update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 RUN wget https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py && \
-    pip install flask gevent gunicorn && \
+    pip install flask gevent gunicorn torch torchaudio transformers sentencepiece sagemaker boto3 pydantic protobuf && \
         rm -rf /root/.cache
-
-WORKDIR /opt/program
-
-COPY meta-ai-seamless /opt/program
-COPY requirements.txt /opt/program/requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
 
 
 # Set some environment variables. PYTHONUNBUFFERED keeps Python from buffering our standard
@@ -25,3 +19,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV PYTHONUNBUFFERED=TRUE \
     PYTHONDONTWRITEBYTECODE=TRUE \
     PYTHONPATH="/opt/program:${PATH}"
+
+COPY meta-ai-seamless /opt/program
+WORKDIR /opt/program

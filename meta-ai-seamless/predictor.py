@@ -4,6 +4,7 @@ import logging
 import torch
 from flask import Flask, Response, request
 from transformers import SeamlessM4Tv2Model
+from message import Message
 
 from postprocessor import Postprocessor
 from preprocessor import Preprocessor
@@ -33,7 +34,7 @@ def transformation():
         return Response(response='This predictor only supports JSON data', status=415, mimetype='text/plain')
 
     # Perform the transformation
-    audio_input = Preprocessor().preprocess(data['audio_file_s3_location'])
+    audio_input = Preprocessor().preprocess(Message.from_json(data))
     translated_output = seamless_model.generate(**audio_input, tgt_lang="hin", speaker_id=17)[0].cpu().numpy().squeeze()
 
     # Post-processing
