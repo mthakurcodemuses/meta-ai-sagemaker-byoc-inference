@@ -1,12 +1,10 @@
 import boto3
 import torch
 import torchaudio
-from transformers import AutoProcessor
 from app_logger import app_logger as log
 from message import Message
 
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
-processor = AutoProcessor.from_pretrained("facebook/seamless-m4t-v2-large")
 
 SAMPLING_RATE = 16000
 
@@ -27,5 +25,4 @@ class Preprocessor:
         audio_message_torch = torch.tensor(sig)
         if sr != SAMPLING_RATE:
             audio_message_torch = torchaudio.functional.resample(audio_message_torch, orig_freq=sr, new_freq=16000)
-        audio_inputs = processor(audios=audio_message_torch["array"], return_tensors="pt").to(device)
-        return audio_inputs
+        return audio_message_torch
