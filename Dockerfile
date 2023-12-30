@@ -2,12 +2,11 @@ FROM python:3.11-slim-buster
 
 RUN apt-get -y update && apt-get install -y --no-install-recommends \
          wget \
-         python3 \
          nginx \
          ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-RUN wget https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py && \
+RUN wget https://bootstrap.pypa.io/get-pip.py && python get-pip.py && \
     pip install flask gevent gunicorn torch torchaudio transformers sentencepiece sagemaker boto3 pydantic protobuf && \
         rm -rf /root/.cache
 
