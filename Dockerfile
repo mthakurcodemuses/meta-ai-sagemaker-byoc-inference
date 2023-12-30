@@ -4,6 +4,7 @@ RUN apt-get -y update && apt-get install -y --no-install-recommends \
          wget \
          python3 \
          nginx \
+         dos2unix \
          ca-certificates \
          git \
     && rm -rf /var/lib/apt/lists/*
