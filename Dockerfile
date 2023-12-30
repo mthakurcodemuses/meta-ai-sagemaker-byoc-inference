@@ -3,6 +3,7 @@ FROM python:3.11
 RUN apt-get -y update && apt-get install -y --no-install-recommends \
          wget \
          nginx \
+         dos2unix \
          ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
@@ -19,4 +20,5 @@ ENV PYTHONDONTWRITEBYTECODE=TRUE
 ENV PATH="/opt/program:${PATH}"
 
 COPY meta-ai-seamless /opt/program
+RUN find /opt/program -type f -print0 | xargs -0 dos2unix
 WORKDIR /opt/program
