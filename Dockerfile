@@ -3,6 +3,7 @@ FROM python:3.10-slim-buster
 RUN apt-get -y update && apt-get install -y --no-install-recommends \
          wget \
          python3 \
+         ffmpeg \
          nginx \
          dos2unix \
          ca-certificates \
