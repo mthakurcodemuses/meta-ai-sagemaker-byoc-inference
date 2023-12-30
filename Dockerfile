@@ -25,5 +25,3 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV PYTHONUNBUFFERED=TRUE \
     PYTHONDONTWRITEBYTECODE=TRUE \
     PYTHONPATH="/opt/program:${PATH}"
-
-CMD ["python", "serve.py"]
