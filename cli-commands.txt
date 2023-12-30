@@ -1,0 +1,5 @@
+aws ecr get-login-password --region us-east-1 |docker login --username AWS --password-stdin 585990787062.dkr.ecr.us-east-1.amazonaws.com/multilingual-chat-app-seamless-model
+docker tag seamless_container 585990787062.dkr.ecr.us-east-1.amazonaws.com/multilingual-chat-app-seamless-model
+docker push 585990787062.dkr.ecr.us-east-1.amazonaws.com/multilingual-chat-app-seamless-model
+docker run -v $HOME/.aws/credentials:/home/app/.aws/credentials:ro seamless_container
+```

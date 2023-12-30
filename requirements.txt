@@ -1,0 +1,8 @@
+torch
+torchaudio
+transformers
+sentencepiece
+boto3
+pydantic
+flask
+protobuf
