@@ -23,3 +23,8 @@ ENV PATH="/opt/program:${PATH}"
 COPY meta-ai-seamless /opt/program
 RUN find /opt/program -type f -print0 | xargs -0 dos2unix
 WORKDIR /opt/program
+
+# Expose the port that uvicorn listens on
+EXPOSE 8000
+
+CMD ["python", "serve"]
