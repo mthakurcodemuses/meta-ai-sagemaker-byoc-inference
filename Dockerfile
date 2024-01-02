@@ -9,7 +9,7 @@ RUN apt-get -y update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 RUN wget https://bootstrap.pypa.io/get-pip.py && python get-pip.py && \
-    pip install flask gevent gunicorn torch torchaudio transformers sentencepiece sagemaker boto3 pydantic protobuf && \
+    pip install flask gevent gunicorn torch torchaudio transformers sentencepiece sagemaker boto3 pydantic protobuf scipy && \
         rm -rf /root/.cache
 
 # Set some environment variables. PYTHONUNBUFFERED keeps Python from buffering our standard
@@ -26,6 +26,5 @@ WORKDIR /opt/program
 
 # Expose the port that nginx listens on
 EXPOSE 8080
-EXPOSE 8000
 
 CMD ["python", "serve"]

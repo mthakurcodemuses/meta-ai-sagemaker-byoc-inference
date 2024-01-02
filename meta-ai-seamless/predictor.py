@@ -1,11 +1,11 @@
 import json
-from app_logger import app_logger as log
 
 import torch
 from flask import Flask, Response, request
 from transformers import SeamlessM4Tv2Model
-from message import Message
 
+from app_logger import app_logger as log
+from message import Message
 from postprocessor import Postprocessor
 from preprocessor import Preprocessor
 
@@ -15,6 +15,7 @@ seamless_model = SeamlessM4Tv2Model.from_pretrained("facebook/seamless-m4t-v2-la
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 log.info(f"Device: {device}")
 seamless_model.to(device)
+
 
 @app.route('/ping', methods=['GET'])
 def ping():
@@ -37,13 +38,16 @@ def transformation():
     chat_message = Message.from_json(data)
     log.info(f"Chat Message: {chat_message}")
     audio_input = Preprocessor().preprocess(chat_message)
-    translated_output = seamless_model.generate(**audio_input, tgt_lang="hin", speaker_id=17)[0].cpu().numpy().squeeze()
-    log.info(f"Translated Output: {type(translated_output)}")
+
+    target_language = chat_message.recipient_preferred_language if chat_message.recipient_preferred_language != '' else "hin"
+    log.info(f"Target Language: {target_language}")
+    translated_output_array = seamless_model.generate(**audio_input, tgt_lang=target_language)[0].cpu().numpy().squeeze()
+    log.info(f"Translated Output: {type(translated_output_array)}")
 
     # Post-processing
     # Write translated output to S3
     # Return S3 location of translated output
-    translated_audio_message_s3_location = Postprocessor().postprocess(chat_message, translated_output)
+    translated_audio_message_s3_location = Postprocessor().postprocess(chat_message, translated_output_array, target_language)
 
     output = {
         "translated_audio_s3_location": translated_audio_message_s3_location,
