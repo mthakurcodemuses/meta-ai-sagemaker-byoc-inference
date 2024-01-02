@@ -24,7 +24,8 @@ COPY meta-ai-seamless /opt/program
 RUN find /opt/program -type f -print0 | xargs -0 dos2unix
 WORKDIR /opt/program
 
-# Expose the port that uvicorn listens on
+# Expose the port that nginx listens on
+EXPOSE 8080
 EXPOSE 8000
 
 CMD ["python", "serve"]
