@@ -15,8 +15,9 @@ class Message(BaseModel):
     recipient_preferred_language: str = '' # comes in UI message
     status: str = ''
 
-    def from_json(self, json_string):
-        json_dict = json.loads(json_string)
+    @staticmethod
+    def from_json(data):
+        json_dict = json.loads(data)
         return Message(**json_dict)
 
 

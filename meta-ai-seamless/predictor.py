@@ -1,5 +1,5 @@
 import json
-import logging
+from app_logger import app_logger as log
 
 import torch
 from flask import Flask, Response, request
@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 seamless_model = SeamlessM4Tv2Model.from_pretrained("facebook/seamless-m4t-v2-large")
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
-logging.info(f"Device: {device}")
+log.info(f"Device: {device}")
 seamless_model.to(device)
 
 @app.route('/ping', methods=['GET'])
@@ -29,16 +29,16 @@ def transformation():
     data = None
     if request.content_type == 'application/json':
         data = request.json
-        logging.info(f"Received data: {data}")
+        log.info(f"Received data: {data}")
     else:
         return Response(response='This predictor only supports JSON data', status=415, mimetype='text/plain')
 
     # Perform the transformation
     chat_message = Message.from_json(data)
-    logging.info(f"Chat Message: {chat_message}")
+    log.info(f"Chat Message: {chat_message}")
     audio_input = Preprocessor().preprocess(chat_message)
     translated_output = seamless_model.generate(**audio_input, tgt_lang="hin", speaker_id=17)[0].cpu().numpy().squeeze()
-    logging.info(f"Translated Output: {type(translated_output)}")
+    log.info(f"Translated Output: {type(translated_output)}")
 
     # Post-processing
     # Write translated output to S3
