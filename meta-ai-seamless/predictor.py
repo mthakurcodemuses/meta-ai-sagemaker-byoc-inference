@@ -13,8 +13,8 @@ app = Flask(__name__)
 
 seamless_model = SeamlessM4Tv2Model.from_pretrained("facebook/seamless-m4t-v2-large")
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
+logging.info(f"Device: {device}")
 seamless_model.to(device)
-
 
 @app.route('/ping', methods=['GET'])
 def ping():
@@ -34,14 +34,16 @@ def transformation():
         return Response(response='This predictor only supports JSON data', status=415, mimetype='text/plain')
 
     # Perform the transformation
-    audio_input = Preprocessor().preprocess(Message.from_json(data))
+    chat_message = Message.from_json(data)
+    logging.info(f"Chat Message: {chat_message}")
+    audio_input = Preprocessor().preprocess(chat_message)
     translated_output = seamless_model.generate(**audio_input, tgt_lang="hin", speaker_id=17)[0].cpu().numpy().squeeze()
+    logging.info(f"Translated Output: {type(translated_output)}")
 
     # Post-processing
     # Write translated output to S3
     # Return S3 location of translated output
-    translated_audio_message_s3_location = Postprocessor().postprocess(translated_output,
-                                                                       data['audio_file_s3_location'])
+    translated_audio_message_s3_location = Postprocessor().postprocess(chat_message, translated_output)
 
     output = {
         "translated_audio_s3_location": translated_audio_message_s3_location,
