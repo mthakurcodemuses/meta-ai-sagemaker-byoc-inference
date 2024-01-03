@@ -29,5 +29,5 @@ class Preprocessor:
         audio_message_torch = torch.tensor(sig)
         if sr != SAMPLING_RATE:
             audio_message_torch = torchaudio.functional.resample(audio_message_torch, orig_freq=sr, new_freq=16000)
-        audio_inputs = processor(audios=audio_message_torch["array"], return_tensors="pt").to(device)
+        audio_inputs = processor(audios=audio_message_torch, return_tensors="pt").to(device)
         return audio_inputs
