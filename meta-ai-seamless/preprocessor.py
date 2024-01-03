@@ -19,11 +19,12 @@ class Preprocessor:
 
     def preprocess(self, message: Message):
         # Retrieve audio file from s3
-        audio_message_s3_location = message.audio_message_s3_location
+        audio_message_s3_location = message.audio_file_location
         log.info(f"Retrieving audio message from {audio_message_s3_location}")
-        audio_message = self.chat_bucket.Object(audio_message_s3_location).get()
+        local_audio_message_file_name = "audio_message.wav"
+        self.chat_bucket.download_file(audio_message_s3_location, local_audio_message_file_name)
         # Check sampling rate and convert if necessary
-        sig, sr = torchaudio.load(audio_message)
+        sig, sr = torchaudio.load(local_audio_message_file_name)
         log.info(f"Audio message shape: {sig.shape} and sampling rate: {sr}")
         audio_message_torch = torch.tensor(sig)
         if sr != SAMPLING_RATE:
