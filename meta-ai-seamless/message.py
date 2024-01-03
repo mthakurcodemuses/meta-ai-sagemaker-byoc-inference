@@ -17,7 +17,6 @@ class Message(BaseModel):
 
     @staticmethod
     def from_json(data):
-        json_dict = json.loads(data)
-        return Message(**json_dict)
+        return Message(**data)
 
 
